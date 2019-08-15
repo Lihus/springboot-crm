@@ -9,15 +9,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    druid:
-      initial-size: 1
-      max-active: 20
-      min-idle: 1
-      stat-view-servlet:
-        allow: true
-      test-on-borrow: true
-    password: 123456
-    url: jdbc:mysql://localhost:3306/springboot_demo
+    url: jdbc:mysql://localhost:4406/springboot_demo
     username: root
+    password: 123456
   thymeleaf:
     cache: false
+
+  mvc:
+    view: # 视图相关
+      prefix: /templates/
+      suffix: .html

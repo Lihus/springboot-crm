@@ -28,13 +28,13 @@ public class User {
      * 用户名
      */
     @NotBlank(message = "用户名不能为空")
-    @Min(value = 3,message = "用户名不能低于3位")
+//    @Min(value = 3,message = "用户名不能低于3位")
     private String username;
     /**
      * 密码
      */
     @NotBlank(message = "密码不能为空")
-    @Min(value = 6,message = "密码不能低于6位")
+//    @Min(value = 6,message = "密码不能低于6位")
     private String password;
     /**
      * 加密密码的盐

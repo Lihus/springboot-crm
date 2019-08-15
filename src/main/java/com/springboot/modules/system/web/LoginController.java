@@ -23,6 +23,7 @@ public class LoginController extends BaseController {
 
     @RequestMapping("/login")
     public String showLoginForm(HttpServletRequest req, Model model) {
+
         String exceptionClassName = (String)req.getAttribute("shiroLoginFailure");
         logger.info("begin to login");
         String error = null;
