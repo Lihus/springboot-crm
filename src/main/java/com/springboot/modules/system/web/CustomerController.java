@@ -44,6 +44,11 @@ public class CustomerController extends BaseController {
     @RequestMapping("/list")
     @RequiresPermissions("customer:view")
     public PageResultSet<Customer> list(CustomerQuery customerQuery, HttpServletRequest request) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.findByUsername(username);
+        if(!SecurityUtils.getSubject().hasRole("admin")) {
+            customerQuery.setPrincipleId(user.getId());
+        }
         return customerService.findByPage(customerQuery);
     }
 

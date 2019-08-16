@@ -86,7 +86,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) {
-        customerMapper.updateByPrimaryKeySelective(customer);
+        int i = customerMapper.updateByPrimaryKeySelective(customer);
+        System.out.println(i);
     }
 
     @Override

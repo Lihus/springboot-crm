@@ -126,6 +126,11 @@
                         </select>
                         <div class="help-block with-errors"></div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="remark">备注:</label>
+                        <input id="remark" type="text" class="form-control" name="remark" placeholder="输入备注信息">
+                        <div class="help-block with-errors"></div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -149,6 +154,7 @@
             </div>
             <div class="modal-body">
                 <form id="editForm">
+                    <input type="hidden" name="id"/>
                     <div class="form-group">
                         <label class="control-label" for="name"><span class="asterisk">*</span>客户名:</label>
                         <input id="editName" type="text" class="form-control" name="name" placeholder="输入用户名"
@@ -187,10 +193,15 @@
                         <label class="control-label" for="users"><span class="asterisk">*</span>负责人:</label>
                         <select name="principalId" id="editUsers" multiple class="form-control select2"
                                 data-placeholder="请从列表选择一项" required>
-                            <option th:each="user : ${userList}" th:value="${user.id}" th:text="${user.name}">
+                            <option th:each="user : ${userList}" th:value="${user.id}" th:text="${user.username}">
                                 用户组不存在
                             </option>
                         </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="remark">备注:</label>
+                        <input id="editRemark" type="text" class="form-control" name="remark" placeholder="输入备注信息">
                         <div class="help-block with-errors"></div>
                     </div>
                 </form>
@@ -201,6 +212,76 @@
                         data-action="{type:'submit',form:'#editForm',url:'@{/customer/update}',after:'$.myAction.refreshTable'}">
                     确定
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- edit Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="detailModalLabel">修改用户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="detailForm">
+                    <input type="hidden" name="id"/>
+                    <div class="form-group">
+                        <label class="control-label" for="name"><span class="asterisk">*</span>客户名:</label>
+                        <input id="detailName" type="text" class="form-control" name="name" placeholder="输入用户名"
+                               minlength="0">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="companyName"><span class="asterisk">*</span>公司名:</label>
+                        <input id="detailCompanyName" type="text" class="form-control" name="companyName" placeholder="输入公司名">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="business"><span class="asterisk">*</span>客户行业:</label>
+                        <input id="detailBusiness" type="text" class="form-control" name="business" placeholder="输入客户行业"
+                               minlength="3">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="informationSource"><span class="asterisk">*</span>客户信息来源:</label>
+                        <input id="detailInformationSource" type="text" class="form-control" name="informationSource" placeholder="输入客户信息来源"
+                               minlength="3">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="score"><span class="asterisk">*</span>评分:</label>
+                        <input id="detailScore" type="number" class="form-control" name="score" placeholder="输入评分"
+                               min="0" max="3">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="address"><span class="asterisk">*</span>客户地址:</label>
+                        <input id="detailAddress" type="text" class="form-control" name="address" placeholder="输入客户地址">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="users"><span class="asterisk">*</span>负责人:</label>
+                        <select name="principalId" id="detailUsers" multiple class="form-control select2"
+                                data-placeholder="请从列表选择一项" required>
+                            <option th:each="user : ${userList}" th:value="${user.id}" th:text="${user.username}">
+                                用户组不存在
+                            </option>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="remark">备注:</label>
+                        <input id="detailRemark" type="text" class="form-control" name="remark" placeholder="输入备注信息">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
@@ -229,6 +310,7 @@
 </div>
 <div id="actionButtons" class="admin-hide">
     <a class="like" href="javascript:void(0)" data-toggle="tooltip" title="Like"><i class="glyphicon glyphicon-heart"></i></a>　
+    <a class="detail ml10" href="javascript:void(0)" data-toggle="tooltip" title="详情"><i class="glyphicon glyphicon-th-list"></i></a>　
     <a shiro:hasPermission="customer:update" class="edit ml10" href="javascript:void(0)" data-toggle="tooltip" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>　
     <a shiro:hasPermission="customer:delete" class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　
 </div>
@@ -256,7 +338,7 @@
                 {field: 'informationSource', title: '客户信息来源', sortable: true, halign: 'left'},
                 {field: 'score', title: '评分', sortable: true, halign: 'left'},
                 {field: 'address', title: '客户联系地址', sortable: true, halign: 'left'},
-                {field: 'principleName', title: '负责人', sortable: true, halign: 'left'},
+                {field: 'principalName', title: '负责人', sortable: true, halign: 'left'},
                 {field: 'creatorName', title: '创建人', sortable: true, halign: 'left'},
                 {field: 'createTs', title: '创建时间', sortable: true, halign: 'left'},
                 {field: 'updateTs', title: '修改时间', sortable: true, halign: 'left'},
@@ -284,19 +366,9 @@
 
     function editAfter(obj, row) {
         var userList = row.userList;
-        var roleIdList = row.roleIdList;
-        var groupIdList = row.groupIdList;
         for (i in userList) {
             var userId = userList[i];
             $('#editForm').find('[name=users]').find('option[value=' + userId + ']').prop('selected', true);
-        }
-        for (i in roleIdList) {
-            var roleId = roleIdList[i];
-            $('#editForm').find('[name=roleIds]').find('option[value=' + roleId + ']').prop('selected', true);
-        }
-        for(i in groupIdList) {
-            var groupId = groupIdList[i];
-            $('#editForm').find('[name=groupIds]').find('option[value=' + groupId + ']').prop('selected', true);
         }
     }
 
@@ -307,6 +379,11 @@
     window.actionEvents = {
         'click .like': function (e, value, row, index) {
             alert('You click like icon, row: ' + JSON.stringify(row));
+            console.log(value, row, index);
+        },
+        'click .detail': function (e, value, row, index) {
+            $('#detailModal').modal('show')
+            $('#detailForm').fillForm(row);
             console.log(value, row, index);
         },
         'click .edit': function (e, value, row, index) {
