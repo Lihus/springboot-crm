@@ -1,5 +1,8 @@
 package com.springboot.modules.system.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -12,12 +15,12 @@ public class CustomerFlow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "客户不能为空")
     private Long customerId;
 
     @NotNull(message = "成交金额不能为空")
     private Double amount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createTs;
 
     public Long getId() {

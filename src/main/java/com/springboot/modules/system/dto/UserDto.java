@@ -25,7 +25,6 @@ public class UserDto {
 
     public UserDto(User user) {
         this.id = user.getId();
-        this.organizationId = user.getOrganizationId();
         this.username = user.getUsername();
         this.roleIds = user.getRoleIds();
         this.roleIdList = user.getRoleIdList();

@@ -1,5 +1,9 @@
 package com.springboot.modules.system.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,8 +41,10 @@ public class Customer {
 
     private String creatorName;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createTs;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTs;
 
     private String remark;

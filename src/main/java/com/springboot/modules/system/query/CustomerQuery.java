@@ -7,7 +7,7 @@ public class CustomerQuery extends BaseQuery<Customer> {
 
     private String name;
 
-    private Long principleId;
+    private Long principalId;
 
     public String getName() {
         return name;
@@ -18,12 +18,12 @@ public class CustomerQuery extends BaseQuery<Customer> {
         return this;
     }
 
-    public Long getPrincipleId() {
-        return principleId;
+    public Long getPrincipalId() {
+        return principalId;
     }
 
-    public CustomerQuery setPrincipleId(Long principleId) {
-        this.principleId = principleId;
+    public CustomerQuery setPrincipalId(Long principalId) {
+        this.principalId = principalId;
         return this;
     }
 }

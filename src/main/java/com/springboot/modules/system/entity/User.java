@@ -20,11 +20,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
-     * 所属公司
-     */
-    @NotNull(message = "所属组织不能为空")
-    private Long organizationId;
-    /**
      * 用户名
      */
     @NotBlank(message = "用户名不能为空")
@@ -69,14 +64,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
     }
 
     public String getUsername() {

@@ -5,6 +5,7 @@ import com.springboot.modules.system.entity.Customer;
 import com.springboot.modules.system.entity.CustomerFlow;
 import com.springboot.modules.system.entity.User;
 import com.springboot.modules.system.query.CustomerQuery;
+import com.springboot.modules.system.query.FlowQuery;
 import com.springboot.modules.system.service.CustomerService;
 import com.springboot.modules.system.service.UserService;
 import com.springboot.utils.BaseController;
@@ -18,8 +19,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,8 +54,20 @@ public class CustomerController extends BaseController {
     public PageResultSet<Customer> list(CustomerQuery customerQuery, HttpServletRequest request) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         User user = userService.findByUsername(username);
-        if(!SecurityUtils.getSubject().hasRole("admin")) {
-            customerQuery.setPrincipleId(user.getId());
+        if (!SecurityUtils.getSubject().hasRole("admin")) {
+            customerQuery.setPrincipalId(user.getId());
+        }
+        return customerService.findByPage(customerQuery);
+    }
+
+    @ResponseBody
+    @RequestMapping("/output")
+    @RequiresPermissions("customer:view")
+    public PageResultSet<Customer> output(CustomerQuery customerQuery, HttpServletRequest request) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.findByUsername(username);
+        if (!SecurityUtils.getSubject().hasRole("admin")) {
+            customerQuery.setPrincipalId(user.getId());
         }
         return customerService.findByPage(customerQuery);
     }
@@ -97,15 +117,71 @@ public class CustomerController extends BaseController {
 
     @ResponseBody
     @RequiresPermissions("customer:update")
-    @PostMapping("/{id}/flow")
+    @PostMapping("/flow/create")
     @SystemLog("更新客户成交情况")
-    public Result<?> addFlow(@PathVariable("id") Long id, CustomerFlow flow) {
-        flow.setCustomerId(id);
+    public Result<?> addFlow(CustomerFlow flow) {
         customerService.addFlow(flow);
+        return Result.success();
+    }
+
+    @ResponseBody
+    @RequiresPermissions("customer:view")
+    @GetMapping("/flow/list")
+    @SystemLog("更新客户成交情况")
+    public PageResultSet<CustomerFlow> list(FlowQuery flowQuery) {
+        return customerService.findFlowPage(flowQuery);
+    }
+
+    @ResponseBody
+    @RequiresPermissions("customer:update")
+    @PostMapping("/flow/delete")
+    @SystemLog("更新客户成交情况")
+    public Result<?> deleteFlow(@RequestParam("id") Long id) {
+        customerService.delFlow(id);
         return Result.success();
     }
 
     private void setCommonData(Model model) {
         model.addAttribute("userList", userService.findAll());
+    }
+
+    public void output(String filePath,HttpServletResponse response) {
+        FileInputStream in = null;
+        ServletOutputStream out = null;
+        BufferedOutputStream toOut = null;
+        try {
+            in = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[in.available()];
+            while (in.read(buffer) != -1) {
+                response.reset();// 清空
+                // 设置响应的文件的头文件格式
+                response.setContentType("application/octet-stream");
+                response.setHeader("Content-Disposition",
+                        "attachment;filename=" + new
+                                String(filePath.getBytes("GBK"), "ISO8859-1"));
+                response.addHeader("Content-type", "application-download");
+                // 获取响应的对象流
+                out = response.getOutputStream();
+                toOut = new BufferedOutputStream(out);
+                toOut.write(buffer);
+                toOut.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+                if (toOut != null) {
+                    toOut.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

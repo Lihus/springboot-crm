@@ -12,7 +12,6 @@ import com.springboot.modules.system.dto.UserDto;
 import com.springboot.modules.system.entity.User;
 import com.springboot.modules.system.query.UserQuery;
 import com.springboot.modules.system.service.GroupService;
-import com.springboot.modules.system.service.OrganizationService;
 import com.springboot.modules.system.service.RoleService;
 import com.springboot.modules.system.service.UserService;
 import com.springboot.utils.BaseController;
@@ -37,9 +36,6 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private OrganizationService organizationService;
 
     @Autowired
     private RoleService roleService;
@@ -105,7 +101,6 @@ public class UserController extends BaseController {
     }
 
     private void setCommonData(Model model) {
-        model.addAttribute("organizationList", organizationService.findAll());
         model.addAttribute("roleList", roleService.findAll());
         model.addAttribute("groupList",groupService.findAll());
     }

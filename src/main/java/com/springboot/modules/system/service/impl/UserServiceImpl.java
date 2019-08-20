@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.springboot.core.exception.CrmException;
 import com.springboot.modules.system.dto.UserDto;
 import com.springboot.modules.system.entity.Group;
-import com.springboot.modules.system.entity.Organization;
 import com.springboot.modules.system.entity.Role;
 import com.springboot.modules.system.entity.User;
 import com.springboot.modules.system.mapper.UserMapper;
@@ -37,9 +36,6 @@ public class UserServiceImpl implements UserService {
     private GroupService groupService;
 
     @Autowired
-    private OrganizationService organizationService;
-
-    @Autowired
     private PasswordHelper passwordHelper;
 
     @Override
@@ -64,7 +60,6 @@ public class UserServiceImpl implements UserService {
         PageHelper.offsetPage(userQuery.getOffset(), userQuery.getLimit());
         userMapper.selectByExample(example).forEach(u -> {
             UserDto dto = new UserDto(u);
-            dto.setOrganizationName(getOrganizationName(Long.valueOf(dto.getOrganizationId())));
             dto.setRoleNames(getRoleNames(dto.getRoleIdList()));
             dto.setGroupNames(getGroupNames(dto.getGroupIdList()));
             dtoList.add(dto);
@@ -118,14 +113,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return s.toString();
-    }
-
-    private String getOrganizationName(Long organizationId) {
-        Organization organization = organizationService.findOne(organizationId);
-        if (organization == null) {
-            return "";
-        }
-        return organization.getName();
     }
 
     @Override

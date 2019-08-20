@@ -112,7 +112,6 @@ public class OAuthController {
 			user = new User();
 			user.setUsername(user.getUsername());
 			user.setPassword(PASSWORD);
-			user.setOrganizationId((long) 1);
 			user.setGroupIds("1");
 			user.setRoleIds("1");
 			user.setLocked(Boolean.FALSE);

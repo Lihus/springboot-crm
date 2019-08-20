@@ -4,6 +4,7 @@ import com.springboot.modules.system.entity.Customer;
 import com.springboot.modules.system.entity.CustomerFlow;
 import com.springboot.modules.system.entity.User;
 import com.springboot.modules.system.query.CustomerQuery;
+import com.springboot.modules.system.query.FlowQuery;
 import com.springboot.utils.PageResultSet;
 
 import java.util.List;
@@ -65,18 +66,26 @@ public interface CustomerService {
     /**
      * 查询
      *
-     * @param customerId
+     * @param flowQuery
      * @return
      */
-    List<CustomerFlow> findFlow(Long customerId);
+    PageResultSet<CustomerFlow> findFlowPage(FlowQuery flowQuery);
 
     /**
-     * 查询
+     * 新增
      *
      * @param flow
      * @return
      */
     void addFlow(CustomerFlow flow);
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     */
+    void delFlow(Long id);
 
     /**
      * 通过名字查询

@@ -24,7 +24,7 @@
                         <form class="form-inline" id="searchForm">
                             <div class="form-group">
                                 <label for="searchName"> 客户名</label>
-                                <input type="text" class="form-control input-sm" name="username" id="searchName" placeholder="请输入用户名">
+                                <input type="text" class="form-control input-sm" name="name" id="searchName" placeholder="请输入用户名">
                             </div>
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-default" onclick="javascript:$('table').bootstrapTable('refresh', {silent: true});">
@@ -217,14 +217,14 @@
     </div>
 </div>
 
-<!-- edit Modal -->
+<!-- detail Modal-->
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="detailModalLabel">修改用户</h4>
+                <h4 class="modal-title" id="detailModalLabel">客户详情</h4>
             </div>
             <div class="modal-body">
                 <form id="detailForm">
@@ -236,52 +236,54 @@
                         <div class="help-block with-errors"></div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="companyName"><span class="asterisk">*</span>公司名:</label>
-                        <input id="detailCompanyName" type="text" class="form-control" name="companyName" placeholder="输入公司名">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="business"><span class="asterisk">*</span>客户行业:</label>
-                        <input id="detailBusiness" type="text" class="form-control" name="business" placeholder="输入客户行业"
-                               minlength="3">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="informationSource"><span class="asterisk">*</span>客户信息来源:</label>
-                        <input id="detailInformationSource" type="text" class="form-control" name="informationSource" placeholder="输入客户信息来源"
-                               minlength="3">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="score"><span class="asterisk">*</span>评分:</label>
-                        <input id="detailScore" type="number" class="form-control" name="score" placeholder="输入评分"
-                               min="0" max="3">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="address"><span class="asterisk">*</span>客户地址:</label>
-                        <input id="detailAddress" type="text" class="form-control" name="address" placeholder="输入客户地址">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="users"><span class="asterisk">*</span>负责人:</label>
-                        <select name="principalId" id="detailUsers" multiple class="form-control select2"
-                                data-placeholder="请从列表选择一项" required>
-                            <option th:each="user : ${userList}" th:value="${user.id}" th:text="${user.username}">
-                                用户组不存在
-                            </option>
-                        </select>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label" for="remark">备注:</label>
                         <input id="detailRemark" type="text" class="form-control" name="remark" placeholder="输入备注信息">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+                <div id="flowToolbar">
+                    <form class="form-inline" id="flowSearchForm">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control input-sm" name="customerId" id="customerId">
+                        </div>
+                    </form>
+                </div>
+                <table class="table" id="flowTable">
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--flow-->
+<div class="modal fade" id="flowModal" tabindex="-1" role="dialog" aria-labelledby="flowModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="flowModalLabel">添加交易</h4>
+            </div>
+            <div class="modal-body">
+                <form id="flowForm">
+                    <input id="flowCustomerId" type="hidden" name="customerId"/>
+                    <div class="form-group">
+                        <label class="control-label" for="amount"><span class="asterisk">*</span>交易额:</label>
+                        <input id="amount" type="number" step="0.01" class="form-control" name="amount" placeholder="输入交易数量，保留两位小数"
+                               min="0">
                         <div class="help-block with-errors"></div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="editForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#flowForm',url:'@{/customer/flow/create}',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
             </div>
         </div>
     </div>
@@ -309,50 +311,69 @@
     </div>
 </div>
 <div id="actionButtons" class="admin-hide">
-    <a class="like" href="javascript:void(0)" data-toggle="tooltip" title="Like"><i class="glyphicon glyphicon-heart"></i></a>　
-    <a class="detail ml10" href="javascript:void(0)" data-toggle="tooltip" title="详情"><i class="glyphicon glyphicon-th-list"></i></a>　
+    <a shiro:hasPermission="customer:view" class="detail ml10" href="javascript:void(0)" data-toggle="tooltip" title="详情"><i class="glyphicon glyphicon-th-list"></i></a>　
+    <a shiro:hasPermission="customer:update" class="flow ml10" href="javascript:void(0)" data-toggle="tooltip" title="添加交易"><i class="glyphicon glyphicon-menu-hamburger"></i></a>　
     <a shiro:hasPermission="customer:update" class="edit ml10" href="javascript:void(0)" data-toggle="tooltip" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>　
     <a shiro:hasPermission="customer:delete" class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　
+</div>
+<<div id="flowButtons" class="admin-hide">
+    <a shiro:hasPermission="customer:update" class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　
 </div>
 <!-- zTree -->
 <div id="menuContent" class="menuContent"
      style="display:none;z-index:1989101600;position: absolute;border: 1px solid #ccc; background-color: #fff;">
     <ul id="tree" class="ztree"></ul>
 </div>
+</html>
+
+
 <script th:inline="javascript">
+
+    var $rowId;
 
     var $table = $('#table');
 
-    $(function () {
-        // bootstrap table初始化
-        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
-        $table.bootstrapTable({
-            url: CONTEXT_PATH + '/customer/list',
-            idField: 'id',
-            columns: [
-                {field: 'state', checkbox: true},
-                {field: 'id', title: '编号', sortable: true, halign: 'left'},
-                {field: 'name', title: '客户名', sortable: true, halign: 'left'},
-                {field: 'companyName', title: '公司名称', sortable: true, halign: 'left'},
-                {field: 'business', title: '客户行业', sortable: true, halign: 'left'},
-                {field: 'informationSource', title: '客户信息来源', sortable: true, halign: 'left'},
-                {field: 'score', title: '评分', sortable: true, halign: 'left'},
-                {field: 'address', title: '客户联系地址', sortable: true, halign: 'left'},
-                {field: 'principalName', title: '负责人', sortable: true, halign: 'left'},
-                {field: 'creatorName', title: '创建人', sortable: true, halign: 'left'},
-                {field: 'createTs', title: '创建时间', sortable: true, halign: 'left'},
-                {field: 'updateTs', title: '修改时间', sortable: true, halign: 'left'},
-                {
-                    field: 'action',
-                    title: '操作',
-                    halign: 'center',
-                    align: 'center',
-                    formatter: 'actionFormatter',
-                    events: 'actionEvents',
-                    clickToSelect: false
-                }
-            ]
-        });
+    // bootstrap table初始化
+    // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+    $table.bootstrapTable({
+        url: CONTEXT_PATH + '/customer/list',
+        idField: 'id',
+        toolbar: '#toolbar',
+        columns: [
+            {field: 'state', checkbox: true},
+            {field: 'id', title: '编号', sortable: true, halign: 'left'},
+            {field: 'name', title: '客户名', sortable: true, halign: 'left'},
+            {field: 'companyName', title: '公司名称', sortable: true, halign: 'left'},
+            {field: 'business', title: '客户行业', sortable: true, halign: 'left'},
+            {field: 'informationSource', title: '客户信息来源', sortable: true, halign: 'left'},
+            {field: 'score', title: '评分', sortable: true, halign: 'left'},
+            {field: 'address', title: '客户联系地址', sortable: true, halign: 'left'},
+            {field: 'principalName', title: '负责人', sortable: true, halign: 'left'},
+            {field: 'creatorName', title: '创建人', sortable: true, halign: 'left'},
+            {field: 'createTs', title: '创建时间', sortable: true, halign: 'left'},
+            {field: 'updateTs', title: '修改时间', sortable: true, halign: 'left'},
+            {
+                field: 'action',
+                title: '操作',
+                halign: 'center',
+                align: 'center',
+                formatter: 'actionFormatter',
+                events: 'actionEvents',
+                clickToSelect: false
+            }
+        ]
+    });
+
+    var $flowTable = $('#flowTable');
+
+    $flowTable.bootstrapTable({
+        url: CONTEXT_PATH + '/customer/flow/list',
+        toolbar: '#flowToolbar',
+        columns: [
+            {field: 'id', title: '编号', sortable: true, halign: 'left'},
+            {field: 'amount', title: '交易额', sortable: true, halign: 'left'},
+            {field: 'createTs', title: '创建时间', sortable: true, halign: 'left'}
+        ]
     });
 
     // 数据表格展开内容
@@ -384,6 +405,13 @@
         'click .detail': function (e, value, row, index) {
             $('#detailModal').modal('show')
             $('#detailForm').fillForm(row);
+            $('#customerId').val(row.id);
+            $flowTable.bootstrapTable("refresh");
+            console.log(value, row, index);
+        },
+        'click .flow': function (e, value, row, index) {
+            $('#flowModal').modal('show')
+            $('#flowCustomerId').val(row.id);
             console.log(value, row, index);
         },
         'click .edit': function (e, value, row, index) {
@@ -403,81 +431,4 @@
         }
     };
 
-    var setting = {
-        view: {
-            dblClickExpand: false
-        },
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        callback: {
-            onClick: onClick
-        }
-    };
-    var orgList = [[${organizationList}]];
-    var zNodes = [];
-    for (var i in orgList) {
-        zNodes.push({id: orgList[i].id, pId: orgList[i].parentId, name: orgList[i].name});
-    }
-
-    function onClick(e, treeId, treeNode) {
-        var zTree = $.fn.zTree.getZTreeObj("tree"),
-            nodes = zTree.getSelectedNodes(),
-            id = "",
-            name = "";
-        nodes.sort(function compare(a, b) {
-            return a.id - b.id;
-        });
-        for (var i = 0, l = nodes.length; i < l; i++) {
-            id += nodes[i].id + ",";
-            name += nodes[i].name + ",";
-        }
-        if (id.length > 0) id = id.substring(0, id.length - 1);
-        if (name.length > 0) name = name.substring(0, name.length - 1);
-        $("#organizationId").val(id);
-        $("#organizationName").val(name);
-        $("#editOrganizationId").val(id);
-        $("#editOrganizationName").val(name);
-        hideMenu();
-    }
-
-    function showMenu() {
-        var cityObj = $("#organizationName");
-        var cityOffset = $("#organizationName").offset();
-        $("#menuContent").css({
-            left: cityOffset.left + "px",
-            top: cityOffset.top + cityObj.outerHeight()
-        }).slideDown("fast");
-
-        $("body").bind("mousedown", onBodyDown);
-    }
-
-    function showMenuOfEdit() {
-        var cityObj = $("#editOrganizationName");
-        var cityOffset = $("#editOrganizationName").offset();
-        $("#menuContent").css({
-            left: cityOffset.left + "px",
-            top: cityOffset.top + cityObj.outerHeight()
-        }).slideDown("fast");
-
-        $("body").bind("mousedown", onBodyDown);
-    }
-
-    function hideMenu() {
-        $("#menuContent").fadeOut("fast");
-        $("body").unbind("mousedown", onBodyDown);
-    }
-
-    function onBodyDown(event) {
-        if (!(event.target.id == "organizationName" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
-            hideMenu();
-        }
-    }
-
-    $.fn.zTree.init($("#tree"), setting, zNodes);
-    $("#organizationName").click(showMenu);
-    $("#editOrganizationName").click(showMenuOfEdit);
 </script>
-</html>
